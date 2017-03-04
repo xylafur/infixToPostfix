@@ -32,6 +32,9 @@ public:
             temp=temp->getNext();
         }
     }
+    bool isEmpty(){
+        return this->list->getHead() == NULL;
+    }
 
 };
 

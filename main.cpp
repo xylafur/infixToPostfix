@@ -1,18 +1,10 @@
-#include "stack.h"
 #include <iostream>
-
+#include "fixStacks.h"
 
 int main(){
-    Stack<int> * myStack = new Stack<int>();
-    myStack->push(5);
-    myStack->push(6);
-    myStack->push(7);
-
-    std::cout << myStack->pop() << std::endl;
-
-    myStack->print();
-
-    delete(myStack);
-    
+    std::string infix = "A * ( B + C )";
+    Converter * con = new Converter(infix);
+    con->printStacks();
+    delete(con);
     return 0;
 }
