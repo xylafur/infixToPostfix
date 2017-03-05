@@ -45,6 +45,31 @@ private:
                 return operand;
         }
     }
+    //step thats called after processing a character.  Flushes the
+    // operator/ operand stacks if it is needed
+    void checkStacks(){
+        //if either is empty don't even bother yet
+        if(operands->isEmpty() || operators->isEmpty() )
+            return;
+        if(operands->size() >= 2){
+            char temp = operands->pop();
+            eval->push(operands->pop());
+            eval->push(temp);
+            if(parenthesisLevel == 0 && operators->size() > 0)
+                eval->push(operators->pop());
+        }
+    }
+    //called at the very end of conversion.  Flushes everything out of the
+    // stacks into the final string
+    void flush(){
+        while(!operands->isEmpty())
+            eval->push(operands->pop());
+        while(!operators->isEmpty()){
+            char temp = operators->pop();
+            if(temp!='(' && temp!=')')
+                eval->push(temp);
+        }
+    }
     //grabs the next character from the string and processes it
     void processCurrentChar(){
         Type charType = defineCharacter();
@@ -52,12 +77,24 @@ private:
             this->operands->push(infix.at(index));
         else if(charType == operat)
             this->operators->push(infix.at(index));
+        checkStacks();
     }
+    //final step.  Takes the eval stack and turns it into the proper postfix
+    // string
+    void stackToString(){
+        std::string str = "";
+        while(!eval->isEmpty())
+            str = eval->pop() + str;
+        this->postfix = str;
+    }
+    //function to convert infix string to postfix string
     void convert(){
         while(index < infix.length()){
             processCurrentChar();
             this->index++;
         }
+        flush();
+        stackToString();
     }
 public:
     Converter(std::string input){
@@ -79,6 +116,9 @@ public:
         this->operators->print();
         std::cout << "Eval\n";
         this->eval->print();
+    }
+    void print(){
+        std::cout<<this->postfix<<std::endl;
     }
 
 };

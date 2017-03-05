@@ -35,6 +35,15 @@ public:
     bool isEmpty(){
         return this->list->getHead() == NULL;
     }
+    int size(){
+        DoubleLinkedListNode<T> * temp = this->list->getHead();
+        int count = 0;
+        while(temp!=NULL){
+            count++;
+            temp=temp->getNext();
+        }
+        return count;
+    }
 
 };
 
