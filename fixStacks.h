@@ -59,15 +59,42 @@ private:
                 eval->push(operators->pop());
         }
     }
+    //flushes values from a specified stack in reverse order
+    void flushStackReverse(Stack<char> * stk){
+        Stack<char> * temp = new Stack<char>();
+        while(!stk->isEmpty())
+            temp->push(stk->pop());
+        flushStack(temp);
+        delete(temp);
+    }
     //called at the very end of conversion.  Flushes everything out of the
     // stacks into the final string
-    void flush(){
-        while(!operands->isEmpty())
-            eval->push(operands->pop());
-        while(!operators->isEmpty()){
-            char temp = operators->pop();
-            if(temp!='(' && temp!=')')
+    void flushStack(Stack<char> * stk){
+        while(!stk->isEmpty()){
+            char temp = stk->pop();
+            if(temp!='('&&temp!=')')
                 eval->push(temp);
+        }
+    }
+    void flush(){
+        flushStackReverse(this->operands);
+        flushStack(this->operators);
+    }
+    void pushByPriority(Stack<char> * stk){
+        char temp;
+        if(stk->isEmpty())
+            stk->push(infix.at(index));
+        else{
+            temp = stk->pop();
+            if(parenthesisLevel > 0){
+                stk->push(infix.at(index));
+                stk->push(temp);
+            }
+            else{
+                stk->push(temp);
+                stk->push(infix.at(index));
+            }
+
         }
     }
     //grabs the next character from the string and processes it
@@ -76,7 +103,7 @@ private:
         if(charType == operand)
             this->operands->push(infix.at(index));
         else if(charType == operat)
-            this->operators->push(infix.at(index));
+            pushByPriority(this->operators);
         checkStacks();
     }
     //final step.  Takes the eval stack and turns it into the proper postfix
