@@ -1,23 +1,28 @@
 #include <iostream>
+#include <fstream>
 #include "fixStacks.h"
 
 int main(){
-    std::string infix = "A * ( B + C )";
-    Converter * con = new Converter(infix);
-    //con->printStacks();
-    con->print();
-    delete(con);
+    std::string infix;
+    ifstream fin;
+    fin.open(argv[1]);
+    if (fin.fail())
+    {
+        cout << "File did not open" << endl;
+        exit (1);
+    }
 
-    infix = "A+B";
-    con = new Converter(infix);
-    con->print();
-    delete(con);
+    fin >> infix;
 
+    while (!fin.eof() )
+    {
+        Converter * con = new Converter(infix);
+        //con->printStacks();
+        con->print();
+        delete(con);
 
-    infix = "(A*B)+(C/D)";
-    con = new Converter(infix);
-    con->print();
-    delete(con);
+        fin >> infix;
+    }
 
     return 0;
 }
