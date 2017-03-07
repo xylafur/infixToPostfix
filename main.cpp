@@ -29,11 +29,13 @@ void useFileInput(char * str){
 void getUserInput(){
     bool cont = true;
 
+    Converter * con;
+    std::string s;
     while(cont){
         std::cout << "Enter an infix string to convert." << std::endl;
-        std::string s;
         getline(std::cin, s);
-        Converter * con = new Converter(s);
+        //theres an error right around here
+        con = new Converter(s);
         con->print();
         delete(con);
 
