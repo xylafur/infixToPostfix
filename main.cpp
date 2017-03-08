@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
+//#include "converter.h"
 #include "fixStacks.h"
-
 void useFileInput(char * str){
     std::string infix;
     ifstream fin;
@@ -12,10 +12,11 @@ void useFileInput(char * str){
         exit (1);
     }
 
-    fin >> infix;
+    //fin >> infix;
 
     while (!fin.eof() )
     {
+        fin >> infix;
         Converter * con = new Converter(infix);
         //con->printStacks();
         con->print();

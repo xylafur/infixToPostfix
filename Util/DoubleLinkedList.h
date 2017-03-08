@@ -74,11 +74,13 @@
       DoubleLinkedListNode<T> * popHead(){
         DoubleLinkedListNode<T> * temp = this->head;
         this->head = temp->getNext();
+        temp->setNext(NULL);
         return temp;
       } 
       DoubleLinkedListNode<T> * popTail(){
         DoubleLinkedListNode<T> * temp = this->tail();
         this->tail = temp->getNext();
+        temp->setNext(NULL);
         return temp;
       }
       void printList(){
@@ -102,6 +104,9 @@
           temp = temp->getPrev();
         }
         cout << endl;
+      }
+      bool isEmpty(){
+        return head==NULL;
       }
 
   };

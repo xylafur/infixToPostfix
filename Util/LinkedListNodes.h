@@ -32,6 +32,7 @@ template <class T> class DoubleLinkedListNode : public LinkedListNode<T>{
       return this->next;
     }
     void setNext(DoubleLinkedListNode * pNode){
+      if(pNode==NULL)return;
       this->next = pNode;
       pNode->prev = this;
     }
@@ -39,6 +40,7 @@ template <class T> class DoubleLinkedListNode : public LinkedListNode<T>{
       return this->prev;
     }
     void setPrev(DoubleLinkedListNode * pNode){
+      if(pNode==NULL)return;
       this->prev = pNode;
       pNode->next = this;
     }
