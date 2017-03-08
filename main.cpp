@@ -26,23 +26,31 @@ void useFileInput(char * str){
 
 
 }
-void getUserInput(){
-    bool cont = true;
 
-    Converter * con;
-    std::string s;
-    while(cont){
-        std::cout << "Enter an infix string to convert." << std::endl;
-        getline(std::cin, s);
-        //theres an error right around here
-        con = new Converter(s);
+void doIt(std::string s){
+        Converter *con = new Converter(s);
         con->print();
         delete(con);
 
-        std::cout << "Would you like to enter another infix input? (0:no, 1:yes)" << std::endl;
+}
+
+void getUserInput(){
+    bool cont = true;
+
+    std::string s;
+    //while(cont){
+      
+    {
+        std::cout << "Enter an infix string to convert." << std::endl;
         getline(std::cin, s);
-        if(s[0] - '0' == 0)
-            cont = false;
+        //theres an error right around here
+        doIt(s);        
+        
+       // std::cout << "Would you like to enter another infix input? (0:no, 1:yes)" << std::endl;
+        //getline(std::cin, s);
+        //if(s[0] - '0' == 0)
+            //cont = false;
+
     }
     
 }
