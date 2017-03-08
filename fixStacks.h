@@ -24,7 +24,7 @@ private:
     std::string infix, postfix;
     unsigned int index = 0; //curent position in infix
     int parenthesisLevel = 0; //how deep we are in parenthesis
-
+    char current;
     //using the enum from earlier to define the current character
     Type defineCharacter(){
         char currentChar = this->infix.at(index);
@@ -67,6 +67,63 @@ private:
         flushStack(temp);
         delete(temp);
     }
+    void popTillParenth(){
+        /*
+         *  A closing parenthesis was found, pop till the opener
+         */
+        if( parenthesisLevel < 0){printf("Boi you fucked up somewhere");return;}
+        char temp = operators->pop();
+        while(temp!='('){
+            eval->push(temp);
+            temp = operators->pop();
+        }
+    }
+    void checkPresidence(){
+        /*
+         *  Checks the presidence of the current operator in relation to the
+         *  others on the stack.  Will either 
+         *      1) Push it to the stack if its lower presidence
+         *      2) Pop off all operators until one with higher presidence is
+         *              found.  Then will push the value to the stack.
+         *      3) If the char is a parenthesis we need to consider which side
+         *              it is
+         *          If it is the closing side we pop until we get to the opening
+         */
+        int parenthDepth = parenthesisLevel;
+        switch(this->current){
+            case '(':
+                parenthDepth++;
+                operators->push('(');
+                break;
+            case ')':
+                parenthDepth--;
+                popTillParenth();
+                break;
+            case '+':
+            case '-':
+                {
+                if(operators->isEmpty()){operators->push(this->current);break;}
+                char temp = operators->peek();
+                while((temp == '*' || temp == '/')){
+                    eval->push(operators->pop());
+                    if(operators->isEmpty())
+                        break;
+                    temp = operators->peek();
+
+                }
+                operators->push(this->current);
+                }
+                break;
+            case '*':
+            case '/':
+                operators->push(this->current);
+                break;
+            default:
+                break;
+        }
+
+    }
+
     //called at the very end of conversion.  Flushes everything out of the
     // stacks into the final string
     void flushStack(Stack<char> * stk){
@@ -77,33 +134,16 @@ private:
         }
     }
     void flush(){
-        flushStackReverse(this->operands);
+        flushStack(this->operands);
         flushStack(this->operators);
-    }
-    void pushByPriority(Stack<char> * stk){
-        char temp;
-        if(stk->isEmpty())
-            stk->push(infix.at(index));
-        else{
-            temp = stk->pop();
-            if(parenthesisLevel > 0){
-                stk->push(infix.at(index));
-                stk->push(temp);
-            }
-            else{
-                stk->push(temp);
-                stk->push(infix.at(index));
-            }
-
-        }
     }
     //grabs the next character from the string and processes it
     void processCurrentChar(){
         Type charType = defineCharacter();
         if(charType == operand)
-            this->operands->push(infix.at(index));
+            this->eval->push(infix.at(index));
         else if(charType == operat)
-            pushByPriority(this->operators);
+            checkPresidence();
         checkStacks();
     }
     //final step.  Takes the eval stack and turns it into the proper postfix
@@ -117,7 +157,9 @@ private:
     //function to convert infix string to postfix string
     void convert(){
         while(index < infix.length()){
+            this->current=infix.at(index);
             processCurrentChar();
+
             this->index++;
         }
         flush();

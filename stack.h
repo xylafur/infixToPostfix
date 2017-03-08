@@ -24,6 +24,9 @@ public:
         delete(temp);
         return tempVal;
     }
+    T peek(){
+        return list->getHead()->getValue();
+    }
     void print(){
         std::cout<<"Head"<<std::endl;
         DoubleLinkedListNode<T> * temp = this->list->getHead();
